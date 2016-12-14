@@ -59,9 +59,9 @@ before_install: . ./tests/travis.sh before_install
 install: . ./tests/travis.sh install
 script: . ./tests/travis.sh script
 
-notifications:
-  irc:
-    channels:
-      - "irc.freenode.org#simp_le"
-    use_notice: true
-    skip_join: true
+#notifications:
+#  irc:
+#    channels:
+#      - "irc.freenode.org#simp_le"
+#    use_notice: true
+#    skip_join: true

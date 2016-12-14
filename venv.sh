@@ -1,6 +1,6 @@
 #!/bin/sh
 
-virtualenv -p /usr/bin/python3 --no-site-packages venv
+virtualenv --no-site-packages venv
 export PATH="$PWD/venv/bin:$PATH"  # #49, activate script requires bash
 for pkg in setuptools pip wheel
 do
