@@ -1,15 +1,9 @@
 # configuration for https://travis-ci.org
 language: python
 
-# container-based architecture
-sudo: false
-
 services:
-  # integration tests Boulder needs AMQP
-  - rabbitmq
-
+  - docker
 addons:
-  mariadb: '10.0'
   hosts:
     - le.wtf
     - le2.wtf
@@ -26,38 +20,34 @@ addons:
       - python
       - python-dev
       - python-virtualenv
-      # Boulder integration test deps
-      - rsyslog
+    # python3.5 is not pre-installed on Travis,
+    # https://github.com/travis-ci/travis-ci/issues/4794#issuecomment-143758799
+    #
+    # We do this instead of setting travis's python: option, because for some
+    # odd reason, that gives us errors about missing docker-compose:
+    # https://travis-ci.org/zenhack/simp_le/jobs/187594794#L218
+      - python3.5
+    sources:
+      - deadsnakes
 
 env:
-  global:
-    - GOPATH=/tmp/go
-    - PATH=$GOPATH/bin:$PATH
   # delegate tests to tox; build matrix contains one suite per testenv
   matrix:
     - TOXENV=py26
     - TOXENV=py27
     - TOXENV=py33
     - TOXENV=py34
+    - TOXENV=py35
     - TOXENV=py26-oldest
     - TOXENV=py27-oldest
     - TOXENV=py33-oldest
     - TOXENV=py34-oldest
+    - TOXENV=py35-oldest
     - TOXENV=lint
-matrix:
-  include:
-    # python3.5 is not pre-installed on Travis,
-    # https://github.com/travis-ci/travis-ci/issues/4794#issuecomment-143758799
-    - env: TOXENV=py35
-      python: 3.5
-    - env: TOXENV=py35-oldest
-      python: 3.5
 
-# source is used mainly for eval+gimme, so `install` can use the right
-# Go environment
-before_install: . ./tests/travis.sh before_install
-install: . ./tests/travis.sh install
-script: . ./tests/travis.sh script
+before_install: ./tests/travis.sh before_install
+install: ./tests/travis.sh install
+script: ./tests/travis.sh script
 
 #notifications:
 #  irc:
